@@ -1,0 +1,11 @@
+{
+    "defaultEnv": "prod",
+    "prod": {
+      "driver": "mysql",
+      "host": { "ENV" : "DBHOST" },
+      "user": { "ENV" : "DBUSER" },
+      "database": { "ENV" : "DBNAME" },
+      "password" : { "ENV" : "DBPASS" },
+      "port": { "ENV" : "DBPORT" }
+    }
+  }

@@ -1,0 +1,635 @@
+{
+    "openapi": "3.0.3",
+    "info" : {
+        "title": "NotesApp RESTfull API",
+        "version": "1.0.0",
+        "description": "Open API for NotesApps",
+        "termsOfService": "https://github.com/adeiskandarzulkarnaen",
+        "contact": {
+            "name": "Ade Iskandar Zulkarnaen",
+            "email": "adeiskandarzulkarnaen@gmail.com"
+        },
+        "license": {
+            "name": "APACHE 2.0",
+            "url": "https://www.apache.org/license/LICENSE-2.0"
+        }
+    },
+    "externalDocs": {
+        "description": "External Documentation",
+        "url": "https://github.com/adeiskandarzulkarnaen"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "localhost"
+        },
+        {
+            "url": "https://canihave.my.id:{port}",
+            "description": "production",
+            "variables": {
+                "port" : {
+                    "description": "server port",
+                    "default": "3000",
+                    "enum": ["3000", "5000"]
+                }
+            }
+        }
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "register a new user",
+                "description": "this end point used to register a new user, if username already registered server response will throw error 400",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "password", "fullname"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "fullname": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "register new user with valid body request",
+                                    "value": {
+                                        "username" : "adeiskandarzulkarnaen",
+                                        "password" : "secret",
+                                        "fullname" : "Ade Iskandar Zulkarnaen"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success register new user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status" : {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data" : {
+                                            "type": "object",
+                                            "properties": {
+                                                "userId": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "user berhasil ditambahkan",
+                                    "data": {
+                                        "userId": "user-123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Failed register new user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "fail",
+                                    "message": "username sudah digunakan."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Users"],
+                "summary": "Search User",
+                "description": "search user by userId",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": false,
+                        "description": "search user by username",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "users": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "username": {
+                                                                "type": "string"
+                                                            },
+                                                            "fullname": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "berhasil mendapatkan data user",
+                                    "data": {
+                                        "users": [
+                                            {
+                                                "id": "user-123",
+                                                "username": "2006043",
+                                                "fullname": "Ade Iskandar Zulkarnaen"
+                                            },
+                                            {
+                                                "id": "user-456",
+                                                "username": "2006040",
+                                                "fullname": "Zamzam Nurahman"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get" :{
+                "tags": ["Users"],
+                "summary": "Get User By Id",
+                "description": "Mendapatkan Data user berdasarkan userId",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "userId for get user",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "/users/user-123"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get user by id",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "user": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string"
+                                                        },
+                                                        "username": {
+                                                            "type": "string"
+                                                        },
+                                                        "fullname": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "data": {
+                                        "user": {
+                                            "id": "user-123",
+                                            "username": "adeiskandarzulkarnaen",
+                                            "fullname": "Ade Iskandar Zulkarnaen"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "user not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "fail",
+                                    "message": "User tidak ditemukan."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+
+        "/authentications": {
+            "post": {
+                "tags": ["Authentications"],
+                "summary": "auth login",
+                "description": "use this endpoint to get access-token and refresh token",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["username", "password"],
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "username": "adeiskandarzulkarnaen",
+                                "password": "rahasia"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string"
+                                                },
+                                                "refreshToken": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "authentication login berhasil",
+                                    "data": {
+                                        "accessToken": "2k4FsmDK4uVuKBfGOBAmrpzhneeIhH9yisk0W8s-23A",
+                                        "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv8"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized",
+                        "content": {
+                            "application/json" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "fail",
+                                    "message": "credensial yang anda berikan salah"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Authentications"],
+                "summary": "auth for renew access token",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["refreshToken"],
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "access token berhasil diperbarui.",
+                                    "data": {
+                                        "accessToken": "PcD1fg3Cx1cy0vGInKKJDpuXwY5K-HvA2TgLzwyVn3g"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "failed",
+                                    "message": "refresh token tidak valid."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Authentications"],
+                "summary": "auth logout",
+                "requestBody": {
+                    "description": "auth for logout",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["refreshToken"],
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "refresh token berhasil dihapus"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorSchema"
+                                },
+                                "example": {
+                                    "status": "failed",
+                                    "message": "refresh token tidak valid."
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+
+        "/notes" : {
+            "post": {
+                "tags": ["Notes"],
+                "summary": "add new notes",
+                "description": "use this end point to create new note",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "payload",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "title": "Catatan A",
+                                "tags": ["Android", "Web"],
+                                "body": "Isi dari catatan A"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": ["status", "message", "data"],
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "noteId": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "Catatan berhasil ditambahkan",
+                                    "data": {
+                                        "noteId": "shublDik8N3G9GJ1"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "500": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorSchema"
+                        },
+                        "example": {
+                            "status": "error",
+                            "message": "maaf, terjadi kegagalan pada server kami"
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "NotesAppBearerToken": {
+                "description": "NotesApp authentication with Bearer token",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "NotesAppApiKey": {
+                "description": "NotesApp authentication with Api Key",
+                "type": "apiKey",
+                "name": "X-API-KEY",
+                "in": "header"
+            }
+        },
+        "schemas": {
+            "ErrorSchema" : {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

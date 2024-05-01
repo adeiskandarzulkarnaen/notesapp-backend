@@ -1,0 +1,5 @@
+{
+  "sql-file": false,
+  "configFile": "migrations/_config/database.json",
+  "table": "migrations"
+}
