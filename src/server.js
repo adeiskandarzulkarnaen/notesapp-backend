@@ -1,33 +1,45 @@
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
+const Inert = require('@hapi/inert');
 const Jwt = require('@hapi/jwt');
+const path = require('path');
 
-// notes
+/* notes */
 const notes = require('./api/notes');
 const NotesService = require('./services/mysql/NotesService');
 const NotesValidator = require('./validator/notes');
 
-// users
+/* users */
 const users = require('./api/users');
 const UsersService = require('./services/mysql/UsersService');
 const UsersValidator = require('./validator/users');
 
-// authentications
+/* authentications */
 const authentications = require('./api/authentications');
 const AuthenticationsService = require('./services/mysql/AuthenticationsService');
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
-// collaborations
+/* collaborations */
 const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/mysql/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
+
+/* helper development plugin */
+const helper = require('./api/helper');
+
+/* storage */
+const StorageService = require('./services/storage/StorageServices');
+
+/* exceptions */
+const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
   const notesService = new NotesService(collaborationsService);
   const usersService = new UsersService();
+  const storageService = new StorageService(path.resolve(__dirname, '../public'));
   const authenticationsService = new AuthenticationsService();
 
   const server = Hapi.server({
@@ -55,9 +67,16 @@ const init = async () => {
         return newResponse;
       }
 
-      // mempertahankan penanganan client error oleh hapi secara native
+      // penanganan client error lainnya
       if (!response.isServer) {
-        return h.continue;
+        // return h.continue; /* <- code penanganan secara native */
+        const statusCode = response.output.statusCode;
+        const errorResponse = h.response({
+          status: 'failed',
+          message: response.message,
+        });
+        errorResponse.code(statusCode);
+        return errorResponse;
       }
 
       // penanganan server error sesuai kebutuhan
@@ -74,10 +93,13 @@ const init = async () => {
     return h.continue;
   });
 
-  // registrasi plugin eksternal
+  // registrasi plugin external
   await server.register([
     {
       plugin: Jwt,
+    },
+    {
+      plugin: Inert,
     },
   ]);
 
@@ -98,6 +120,7 @@ const init = async () => {
     }),
   });
 
+  // registrasi plugin internal
   await server.register([
     {
       plugin: notes,
@@ -110,6 +133,7 @@ const init = async () => {
       plugin: users,
       options: {
         service: usersService,
+        storageService,
         validator: UsersValidator,
       },
     },
@@ -128,6 +152,12 @@ const init = async () => {
         collaborationsService,
         notesService,
         validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin: helper,
+      options: {
+        pool: require('./utils/pool')
       },
     },
   ]);

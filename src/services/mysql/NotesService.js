@@ -1,4 +1,4 @@
-const pool = require('../../configs/pool');
+const pool = require('../../utils/pool');
 const { nanoid } = require('nanoid');
 const InvariantError = require('../../exceptions/InvariantError');
 const { mapDBToModel } = require('../../utils');

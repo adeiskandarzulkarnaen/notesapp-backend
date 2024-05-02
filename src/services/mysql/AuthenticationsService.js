@@ -1,4 +1,4 @@
-const pool = require('../../configs/pool');
+const pool = require('../../utils/pool');
 const InvariantError = require('../../exceptions/InvariantError');
 
 class AuthenticationsService {

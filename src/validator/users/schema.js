@@ -6,4 +6,21 @@ const UserPayloadSchema = Joi.object({
   fullname: Joi.string().required(),
 });
 
-module.exports = { UserPayloadSchema };
+const PatchUserHeaderSchema = Joi.object({
+  'content-type': Joi.string()
+      .valid(
+          'image/avif',
+          'image/bmp',
+          'image/gif',
+          'image/jpeg',
+          'image/jpg',
+          'image/png',
+          'image/tiff',
+          'image/webp',
+      ).required(),
+}).unknown();
+
+module.exports = {
+  UserPayloadSchema,
+  PatchUserHeaderSchema,
+};

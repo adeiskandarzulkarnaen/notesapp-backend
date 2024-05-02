@@ -1,12 +1,16 @@
+const path = require('path');
 
 class UsersHandler {
-  constructor(service, validator) {
+  constructor(service, storageService, validator) {
     this._service = service;
+    this._storageService = storageService;
     this._validator = validator;
 
     this.postUserHandler = this.postUserHandler.bind(this);
     this.getUserByIdHandler = this.getUserByIdHandler.bind(this);
     this.getUsersByUsernameHandler = this.getUsersByUsernameHandler.bind(this);
+    this.patchUserImageHandler = this.patchUserImageHandler.bind(this);
+    this.getUserImageByIdHandler = this.getUserImageByIdHandler.bind(this);
   }
 
   async postUserHandler(request, h) {
@@ -51,6 +55,48 @@ class UsersHandler {
         users,
       },
     };
+  }
+
+  async patchUserImageHandler(request, h) {
+    const { data } = request.payload;
+    const { id: userId } = request.auth.credentials;
+
+    this._validator.validatePatchUserHeader(data.hapi.headers);
+
+    const oldImageFile = await this._service.getUserImageUrlById(userId);
+
+    const filename = await this._storageService.writeFile(data, data.hapi);
+
+    if (oldImageFile) await this._storageService.deleteFile(oldImageFile);
+    await this._service.addUserImageUrl(userId, filename);
+
+    const response = h.response({
+      status: 'success',
+      message: 'berhasil menambahkan image',
+      data: {
+        fileName: `${filename}`,
+      },
+    });
+    response.code(201);
+    return response;
+  }
+
+  async getUserImageByIdHandler(request, h) {
+    const { id: userId } = request.params;
+    const imageFile = await this._service.getUserImageUrlById(userId);
+
+    if (!imageFile) {
+      const response = h.response({
+        status: 'success',
+        message: 'user belum menpunyai image',
+      });
+      response.code(404);
+      return response;
+    }
+
+    const imagePath = path.resolve(this._storageService.folder, imageFile);
+    const response = h.file(imagePath);
+    return response;
   }
 }
 

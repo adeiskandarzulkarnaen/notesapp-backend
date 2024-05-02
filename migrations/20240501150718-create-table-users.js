@@ -39,6 +39,10 @@ exports.up = (db) => {
       type: 'text',
       notNull: true,
     },
+    image_file: {
+      type: 'text',
+      notNull: false,
+    },
   });
 };
 
