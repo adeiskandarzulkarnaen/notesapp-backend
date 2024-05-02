@@ -40,6 +40,40 @@ const init = async () => {
     },
   });
 
+  server.ext('onPreResponse', (request, h) => {
+    // mendapatkan konteks response dari request
+    const { response } = request;
+
+    if (response instanceof Error) {
+      // penanganan client error secara internal.
+      if (response instanceof ClientError) {
+        const newResponse = h.response({
+          status: 'failed',
+          message: response.message,
+        });
+        newResponse.code(response.statusCode);
+        return newResponse;
+      }
+
+      // mempertahankan penanganan client error oleh hapi secara native
+      if (!response.isServer) {
+        return h.continue;
+      }
+
+      // penanganan server error sesuai kebutuhan
+      const newResponse = h.response({
+        status: 'error',
+        message: 'terjadi kegagalan pada server kami',
+      });
+      newResponse.code(500);
+      console.error(response.message);
+      return newResponse;
+    }
+
+    // jika bukan error, lanjutkan dengan response sebelumnya (tanpa terintervensi)
+    return h.continue;
+  });
+
   // registrasi plugin eksternal
   await server.register([
     {
