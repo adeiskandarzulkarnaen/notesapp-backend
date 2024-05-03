@@ -23,7 +23,7 @@ class UsersServices {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
+    if (!result.affectedRows) {
       throw new InvariantError('User gagal ditambahkan');
     }
 
@@ -39,7 +39,7 @@ class UsersServices {
     const [result] = await this._pool.query(query);
 
     if (result.length > 0) {
-      throw new InvariantError('Gagal menambahkan user. Username sudah digunakan.');
+      throw new InvariantError('gagal menambahkan user, username sudah digunakan.');
     }
   }
 
@@ -67,7 +67,7 @@ class UsersServices {
     const [result] = await this._pool.query(query);
 
     if (!result.length) {
-      throw new AuthenticationError('kredensial yang Anda berikan salah');
+      throw new AuthenticationError('username yang anda berikan salah');
     }
 
     const { id, password: hashedPassword } = result[0];
@@ -75,7 +75,7 @@ class UsersServices {
     const match = await bcrypt.compare(password, hashedPassword);
 
     if (!match) {
-      throw new AuthenticationError('kredensial yang Anda berikan salah');
+      throw new AuthenticationError('password yang anda berikan salah');
     }
 
     return id;

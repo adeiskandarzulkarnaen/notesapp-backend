@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.3",
     "info" : {
-        "title": "NotesApp RESTfull API",
+        "title": "NotesApp RESTful API",
         "version": "1.0.0",
         "description": "Open API for NotesApps",
         "termsOfService": "https://github.com/adeiskandarzulkarnaen",
@@ -10,8 +10,8 @@
             "email": "adeiskandarzulkarnaen@gmail.com"
         },
         "license": {
-            "name": "APACHE 2.0",
-            "url": "https://www.apache.org/license/LICENSE-2.0"
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
         }
     },
     "externalDocs": {
@@ -26,7 +26,7 @@
                 "port" : {
                     "description": "server port",
                     "default": "5000",
-                    "enum": ["3000", "5000"]
+                    "enum": ["8080", "3000", "5000"]
                 }
             }
         },
@@ -37,7 +37,7 @@
                 "port" : {
                     "description": "server port",
                     "default": "5000",
-                    "enum": ["3000", "5000"]
+                    "enum": ["443", "3000", "5000"]
                 }
             }
         }

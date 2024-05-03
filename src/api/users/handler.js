@@ -50,7 +50,7 @@ class UsersHandler {
 
     return {
       status: 'success',
-      message: 'berhasil mencari username',
+      message: 'berhasil mendapatkan data user',
       data: {
         users,
       },

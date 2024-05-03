@@ -17,8 +17,8 @@ class CollaborationsService {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
-      throw new InvariantError('Kolaborasi gagal ditambahkan');
+    if (!result.affectedRows) {
+      throw new InvariantError('kolaborasi gagal ditambahkan');
     }
 
     return id;
@@ -32,7 +32,7 @@ class CollaborationsService {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
+    if (!result.affectedRows) {
       throw new InvariantError('kolaborasi gagal dihapus');
     }
   }
@@ -45,8 +45,8 @@ class CollaborationsService {
 
     const [result] = await this._pool.query(query);
 
-    if (result.length === 0) {
-      throw new InvariantError('Kolaborasi gagal diverifikasi');
+    if (!result.length) {
+      throw new InvariantError('kolaborasi gagal diverifikasi');
     }
   }
 }

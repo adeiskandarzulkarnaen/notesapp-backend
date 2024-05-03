@@ -25,7 +25,7 @@ class NotesServices {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
+    if (!result.affectedRows) {
       throw new InvariantError('Catatan gagal ditambahkan');
     }
 
@@ -73,8 +73,8 @@ class NotesServices {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
-      throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
+    if (!result.affectedRows) {
+      throw new NotFoundError('gagal memperbarui catatan. noteId tidak ditemukan');
     }
   }
 
@@ -86,8 +86,8 @@ class NotesServices {
 
     const [result] = await this._pool.query(query);
 
-    if (result.affectedRows === 0) {
-      throw new NotFoundError('Catatan gagal dihapus. Id tidak ditemukan');
+    if (!result.affectedRows) {
+      throw new NotFoundError('catatan gagal dihapus. noteId tidak ditemukan');
     }
   }
 
@@ -100,13 +100,13 @@ class NotesServices {
     const [result] = await this._pool.query(query);
 
     if (!result.length) {
-      throw new NotFoundError('Catatan tidak ditemukan');
+      throw new NotFoundError('catatan tidak ditemukan');
     }
 
     const note = result[0];
 
     if (note.owner !== owner) {
-      throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+      throw new AuthorizationError('anda tidak berhak mengakses resource ini');
     }
   }
 
