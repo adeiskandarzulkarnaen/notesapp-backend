@@ -11,9 +11,9 @@ module.exports = {
     server.route([
       {
         method: 'POST',
-        path: '/helper/truncate/{table?}',
+        path: '/helper/truncate',
         handler: async (request, h) => {
-          const { table } = request.params;
+          const { table } = request.query;;
           const availableTables = ['authentications', 'collaborations', 'notes', 'users'];
           
           // Menentukan tabel yang akan dihapus

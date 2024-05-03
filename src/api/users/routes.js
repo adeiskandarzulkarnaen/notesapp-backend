@@ -8,16 +8,16 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/users/{id}',
-    handler: handler.getUserByIdHandler,
+    path: '/users',
+    handler: handler.getUsersByUsernameHandler,
     options: {
       auth: 'notesapp_jwt',
     },
   },
   {
     method: 'GET',
-    path: '/users',
-    handler: handler.getUsersByUsernameHandler,
+    path: '/users/{id}',
+    handler: handler.getUserByIdHandler,
     options: {
       auth: 'notesapp_jwt',
     },
@@ -38,24 +38,24 @@ const routes = (handler) => [
   },
   {
     method: 'GET',
-    path: '/users/{id}/images',
+    path: '/users/{id}/image',
     handler: handler.getUserImageByIdHandler,
     options: {
       auth: 'notesapp_jwt',
     },
   },
-  {
-    method: 'GET',
-    path: '/public/images/{param*}',
-    handler: {
-      directory: {
-        path: path.resolve(__dirname, '../../../public'),
-      },
-    },
-    options: {
-      auth: 'notesapp_jwt',
-    },
-  },
+  // {
+  //   method: 'GET',
+  //   path: '/users/image/{filename*}',
+  //   handler: {
+  //     directory: {
+  //       path: path.resolve(__dirname, '../../../public'),
+  //     },
+  //   },
+  //   options: {
+  //     auth: 'notesapp_jwt',
+  //   },
+  // },
 ];
 
 module.exports = routes;

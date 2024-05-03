@@ -67,12 +67,15 @@ const init = async () => {
         return newResponse;
       }
 
-      // penanganan client error lainnya
+      // penanganan client error selain instance ClientError
       if (!response.isServer) {
-        // return h.continue; /* <- code penanganan secara native */
+        // /* penanganan secara native */
+        // return h.continue;
+
+        /* penanganan secara custom */
         const statusCode = response.output.statusCode;
         const errorResponse = h.response({
-          status: 'failed',
+          status: 'error',
           message: response.message,
         });
         errorResponse.code(statusCode);
@@ -157,7 +160,7 @@ const init = async () => {
     {
       plugin: helper,
       options: {
-        pool: require('./utils/pool')
+        pool: require('./utils/pool'),
       },
     },
   ]);

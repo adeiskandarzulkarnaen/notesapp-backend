@@ -20,8 +20,15 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3000",
-            "description": "localhost"
+            "url": "http://localhost:{port}",
+            "description": "localhost",
+            "variables": {
+                "port" : {
+                    "description": "server port",
+                    "default": "5000",
+                    "enum": ["3000", "5000"]
+                }
+            }
         },
         {
             "url": "https://canihave.my.id:{port}",
@@ -29,7 +36,7 @@
             "variables": {
                 "port" : {
                     "description": "server port",
-                    "default": "3000",
+                    "default": "5000",
                     "enum": ["3000", "5000"]
                 }
             }
@@ -108,18 +115,7 @@
                         }
                     },
                     "400": {
-                        "description": "Failed register new user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "fail",
-                                    "message": "username sudah digunakan."
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/400"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -128,8 +124,13 @@
             },
             "get": {
                 "tags": ["Users"],
-                "summary": "Search User",
+                "summary": "search users",
                 "description": "search user by userId",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "username",
@@ -200,6 +201,78 @@
                             }
                         }
                     },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "patch" : {
+                "tags": ["Users"],
+                "summary": "upload user image",
+                "description": "this endpoint use for upload user profile image",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "requestBody" : {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["data"],
+                                "properties": {
+                                    "data": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "upload image file"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success upload image file",
+                        "content": {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "status" : {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data" : {
+                                            "type": "object",
+                                            "properties": {
+                                                "fileName": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "berhasil menambahkan image",
+                                    "data": {
+                                        "fileName": "adefoto.png"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -209,8 +282,12 @@
         "/users/{id}": {
             "get" :{
                 "tags": ["Users"],
-                "summary": "Get User By Id",
-                "description": "Mendapatkan Data user berdasarkan userId",
+                "summary": "get user data by userId",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
                 "parameters": [
                     {
                         "name": "id",
@@ -268,19 +345,46 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "user not found",
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/users/{id}/images": {
+            "get" : {
+                "tags": ["Users"],
+                "summary" : "get user image file",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "userId for get user image photo",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "/users/user-123/images"
+                    }
+                ],
+                "responses": {
+                    "200" :{
+                        "description": "success get user image",
                         "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "fail",
-                                    "message": "User tidak ditemukan."
-                                }
-                            }
+                            "image/png": {},
+                            "image/jpeg": {}
                         }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/400"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -293,7 +397,7 @@
             "post": {
                 "tags": ["Authentications"],
                 "summary": "auth login",
-                "description": "use this endpoint to get access-token and refresh token",
+                "description": "use this endpoint to login and get access-token and refresh token",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -317,8 +421,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -354,19 +458,54 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "unauthorized",
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Authentications"],
+                "summary": "auth logout",
+                "description": "use this endpoint to logout your account and will delete the refresh token in the database server",
+                "requestBody": {
+                    "description": "body request logout",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["refreshToken"],
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
                         "content": {
-                            "application/json" : {
+                            "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ErrorSchema"
                                 },
                                 "example": {
-                                    "status": "fail",
-                                    "message": "credensial yang anda berikan salah"
+                                    "status": "success",
+                                    "message": "authentication logout berhasil"
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -375,7 +514,8 @@
             },
             "put": {
                 "tags": ["Authentications"],
-                "summary": "auth for renew access token",
+                "summary": "renew access token",
+                "description": "use this endpoint to get new access token if old access token is expired",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -430,74 +570,7 @@
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "failed",
-                                    "message": "refresh token tidak valid."
-                                }
-                            }
-                        }
-                    },
-                    "500": {
                         "$ref": "#/components/responses/500"
-                    }
-                }
-            },
-            "delete": {
-                "tags": ["Authentications"],
-                "summary": "auth logout",
-                "requestBody": {
-                    "description": "auth for logout",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": ["refreshToken"],
-                                "properties": {
-                                    "refreshToken": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "example": {
-                                "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "success",
-                                    "message": "refresh token berhasil dihapus"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "failed",
-                                    "message": "refresh token tidak valid."
-                                }
-                            }
-                        }
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -517,11 +590,12 @@
                     }
                 ],
                 "requestBody": {
-                    "description": "payload",
+                    "description": "request body to add new notes",
                     "content": {
                         "application/json": {
                             "schema": {
                                 "type": "object",
+                                "required": ["title", "tags", "body"],
                                 "properties": {
                                     "title": {
                                         "type": "string"
@@ -538,21 +612,20 @@
                                 }
                             },
                             "example": {
-                                "title": "Catatan A",
-                                "tags": ["Android", "Web"],
-                                "body": "Isi dari catatan A"
+                                "title": "Tugas 2 Machine Learning",
+                                "tags": ["Computer Science", "CNN"],
+                                "body": "Membuat model clasifikasi gambar, deadline tugas sampai 30 Maret 2024"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "ok",
+                    "201": {
+                        "description": "success create new note",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "type": "object",
-                                    "required": ["status", "message", "data"],
                                     "properties": {
                                         "status": {
                                             "type": "string"
@@ -572,13 +645,377 @@
                                 },
                                 "example": {
                                     "status": "success",
-                                    "message": "Catatan berhasil ditambahkan",
+                                    "message": "catatan berhasil ditambahkan",
                                     "data": {
-                                        "noteId": "shublDik8N3G9GJ1"
+                                        "noteId": "note-shublDik8N3G9GJ1"
                                     }
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "get" :{
+                "tags": ["Notes"],
+                "summary": "get all notes",
+                "description": "use this endpoint to get all your note data and collaboration note data",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200" :{
+                        "description": "success gets all your notes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status" : {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "notes" : {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/NotesDataSchema"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example" : {
+                                    "status": "success",
+                                    "message": "berhasil mendapatkan data notes",
+                                    "data": {
+                                        "notes": [
+                                            {
+                                                "id": "note-mlmsubgg",
+                                                "title": "Tugas 2 Machine Learning",
+                                                "body": "Membuat model clasifikasi gambar, deadline tugas sampai 30 Maret 2024",
+                                                "tags": [
+                                                    "Computer Science",
+                                                    "CNN"
+                                                ],
+                                                "createdAt": "2024-05-03T03:30:55.612Z",
+                                                "updatedAt": "2024-05-03T03:30:55.612Z"
+                                            },
+                                            {
+                                                "id": "note-Lsjbsh",
+                                                "title": "Tugas 3 Pemrograman Mobile",
+                                                "body": "Membuat aplikasi catatan, deadline tugas 4 minggu sampai 2 April 2024",
+                                                "tags": [
+                                                    "Pemrograman Mobile",
+                                                    "Flutter",
+                                                    "SQLite"
+                                                ],
+                                                "createdAt": "2024-05-03T03:48:37.261Z",
+                                                "updatedAt": "2024-05-03T03:48:37.261Z"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+        "/notes/{id}": {
+            "get": {
+                "tags": ["Notes"],
+                "summary": "get specific notes",
+                "description": "Use this endpoint to get note of your own records or data of note that you collaborate with",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200" :{
+                        "description": "success get specific note",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status" : {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "note" : {
+                                                    "$ref": "#/components/schemas/NotesDataSchema"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Notes"],
+                "summary": "update note",
+                "description": "Use this endpoint to edit note that you own or note that you collaborate with",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "edit note payload",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["title", "tags", "body"],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success update note data",
+                        "content": {
+                            "application/jpeg": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "catatan berhasil diperbarui"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Notes"],
+                "summary": "delete a note",
+                "description": "Use this endpoint to delete note that you own or note that you collaborate with",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success delete a note",
+                        "content": {
+                            "application/jpeg": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "catatan berhasil dihapus"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            }
+        },
+
+        "/collaborations": {
+            "post": {
+                "tags": ["Collaborations"],
+                "summary": "add colaboration",
+                "description": "use this endpoint to add other users to a note so they can collaborate on our note",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "requestBody for add user to colaboration",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["noteId", "userId"],
+                                "properties": {
+                                    "noteId" : {
+                                        "type": "string"
+                                    },
+                                    "userId": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "success add coolab with user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "collaborationId": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "colaborasi berhasil ditambahkan",
+                                    "data": {
+                                        "collaborationId": "collab-dhXN6uI"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Collaborations"],
+                "summary": "delete collaboration",
+                "description": "use this end point to delete user from collaboration",
+                "security": [
+                    {
+                        "NotesAppBearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "requestBody for add user to colaboration",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["noteId", "userId"],
+                                "properties": {
+                                    "noteId" : {
+                                        "type": "string"
+                                    },
+                                    "userId": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success add coolab with user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "status": "success",
+                                    "message": "colaborasi berhasil dihapus"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -589,6 +1026,20 @@
     },
     "components": {
         "responses": {
+            "400": {
+                "description": "Client Side Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorSchema"
+                        },
+                        "example": {
+                            "status": "failed",
+                            "message": "pesan kesalahan akan mumcul disini"
+                        }
+                    }
+                }
+            },
             "500": {
                 "description": "Internal Server Error",
                 "content": {
@@ -619,6 +1070,29 @@
             }
         },
         "schemas": {
+            "NotesDataSchema" :{
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    }
+                }
+            },
             "ErrorSchema" : {
                 "type": "object",
                 "properties": {

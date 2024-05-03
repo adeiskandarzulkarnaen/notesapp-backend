@@ -11,7 +11,7 @@ class CollaborationsService {
     const id = `collab-${nanoid(16)}`;
 
     const query = {
-      sql: 'INSERT INTO collaborations VALUES($1, $2, $3) RETURNING id',
+      sql: 'INSERT INTO collaborations VALUES(?, ?, ?)',
       values: [id, noteId, userId],
     };
 
@@ -33,7 +33,7 @@ class CollaborationsService {
     const [result] = await this._pool.query(query);
 
     if (result.affectedRows === 0) {
-      throw new InvariantError('Kolaborasi gagal dihapus');
+      throw new InvariantError('kolaborasi gagal dihapus');
     }
   }
 

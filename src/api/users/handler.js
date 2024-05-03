@@ -64,10 +64,9 @@ class UsersHandler {
     this._validator.validatePatchUserHeader(data.hapi.headers);
 
     const oldImageFile = await this._service.getUserImageUrlById(userId);
+    if (oldImageFile) await this._storageService.deleteFile(oldImageFile);
 
     const filename = await this._storageService.writeFile(data, data.hapi);
-
-    if (oldImageFile) await this._storageService.deleteFile(oldImageFile);
     await this._service.addUserImageUrl(userId, filename);
 
     const response = h.response({
@@ -84,6 +83,7 @@ class UsersHandler {
   async getUserImageByIdHandler(request, h) {
     const { id: userId } = request.params;
     const imageFile = await this._service.getUserImageUrlById(userId);
+    console.log(imageFile)
 
     if (!imageFile) {
       const response = h.response({
@@ -95,6 +95,7 @@ class UsersHandler {
     }
 
     const imagePath = path.resolve(this._storageService.folder, imageFile);
+    console.log(imagePath)
     const response = h.file(imagePath);
     return response;
   }

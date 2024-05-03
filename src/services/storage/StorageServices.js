@@ -14,7 +14,7 @@ class StorageService {
   }
 
   async writeFile(file, meta) {
-    const filename = meta.filename;
+    const filename = +new Date() + `_${meta.filename}`;
     const path = `${this._folder}/${filename}`;
     try {
       await fs.writeFile(path, file);
