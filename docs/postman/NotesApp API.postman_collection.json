@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6d036f96-141f-41ac-97c2-3f71ac42179e",
+		"_postman_id": "412d06d8-c0aa-4a49-96cb-da845617f952",
 		"name": "NotesApp API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23541232"
@@ -301,10 +301,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/users/{{currentUserId}}",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users/{{currentUserId}}",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -370,10 +370,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/users/{{currentUserId}}/image",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users/{{currentUserId}}/image",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -401,9 +401,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:{{port}}/users/image/{{filename}}",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users/image/{{filename}}",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -547,9 +548,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:{{port}}/notes/{{noteId}}",
+							"raw": "{{protokol}}://{{host}}:{{port}}/notes/{{noteId}}",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -695,10 +697,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/collaborations",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/collaborations",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -761,10 +763,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/collaborations",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/collaborations",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
