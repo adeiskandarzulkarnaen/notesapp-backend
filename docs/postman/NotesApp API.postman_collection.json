@@ -48,7 +48,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"2006044\",\r\n    \"password\": \"hilapdeui\"\r\n}",
+							"raw": "{\r\n    \"username\": \"2006043\",\r\n    \"password\": \"hilapdeui\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -56,10 +56,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/authentications",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/authentications",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -96,9 +96,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:{{port}}/authentications",
+							"raw": "{{protokol}}://{{host}}:{{port}}/authentications",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -147,9 +148,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:{{port}}/authentications",
+							"raw": "{{protokol}}://{{host}}:{{port}}/authentications",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -200,10 +202,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/users",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -251,10 +253,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}/users",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -339,10 +341,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/users",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/users",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -463,10 +465,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/notes",
-							"protocol": "http",
+							"raw": "{{protokol}}://{{host}}:{{port}}/notes",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -504,9 +506,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:{{port}}/notes",
+							"raw": "{{protokol}}://{{host}}:{{port}}/notes",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -594,9 +597,10 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:{{port}}/notes/{{noteId}}",
+							"raw": "{{protokol}}://{{host}}:{{port}}/notes/{{noteId}}",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -635,9 +639,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:{{port}}/notes/{{noteId}}",
+							"raw": "{{protokol}}://{{host}}:{{port}}/notes/{{noteId}}",
+							"protocol": "{{protokol}}",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
@@ -792,78 +797,6 @@
 					}
 				}
 			]
-		},
-		{
-			"name": "Development Helpers",
-			"item": [
-				{
-					"name": "Truncate Table",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:{{port}}/helper/truncate",
-							"host": [
-								"localhost"
-							],
-							"port": "{{port}}",
-							"path": [
-								"helper",
-								"truncate"
-							],
-							"query": [
-								{
-									"key": "table",
-									"value": "authentications",
-									"description": "['authentications', 'collaborations', 'notes', 'users']",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Clean Image File",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:{{port}}/helper/clean",
-							"host": [
-								"localhost"
-							],
-							"port": "{{port}}",
-							"path": [
-								"helper",
-								"clean"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"description": "End point ubtuh tahap development"
 		}
 	]
 }
