@@ -239,6 +239,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -315,6 +318,9 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -397,6 +403,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -450,6 +459,9 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -784,6 +796,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -894,6 +909,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -999,6 +1017,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -1097,6 +1118,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -1154,6 +1178,9 @@
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
@@ -1257,6 +1284,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -1334,6 +1364,9 @@
                     "400": {
                         "$ref": "#/components/responses/400"
                     },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
                     }
@@ -1361,6 +1394,24 @@
                                 "value": {
                                     "status": "failed",
                                     "message": "the error message will be attached here"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "Access Token Expired",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorSchema"
+                        },
+                        "examples": {
+                            "failed": {
+                                "value": {
+                                    "status": "error",
+                                    "message": "Token maximum age exceeded"
                                 }
                             }
                         }
