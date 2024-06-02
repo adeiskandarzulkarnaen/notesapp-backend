@@ -22,7 +22,7 @@ jobs:
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
             
             nvm use 18.19
-            cd ~/application/test
+            cd ~/application/testapi
             git pull origin main
             npm install
             pm2 restart testapi
