@@ -14,7 +14,7 @@ module.exports = {
         path: '/helper/truncate',
         handler: async (request, h) => {
           const { table } = request.query;;
-          const availableTables = ['authentications', 'collaborations', 'notes', 'users'];
+          const availableTables = ['collaborations', 'notes', 'users'];
           
           // Menentukan tabel yang akan dihapus
           const tablesToDelete = table && availableTables.includes(table)

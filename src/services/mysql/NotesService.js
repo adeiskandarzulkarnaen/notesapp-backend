@@ -37,7 +37,8 @@ class NotesServices {
       sql: `SELECT notes.* FROM notes
         LEFT JOIN collaborations ON collaborations.note_id = notes.id
         WHERE notes.owner = ? OR collaborations.user_id = ?
-        GROUP BY notes.id`,
+        GROUP BY notes.id
+        ORDER BY notes.updated_at DESC`,
       values: [owner, owner],
     };
     const [result] = await this._pool.query(query);

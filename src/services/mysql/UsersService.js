@@ -24,7 +24,7 @@ class UsersServices {
     const [result] = await this._pool.query(query);
 
     if (!result.affectedRows) {
-      throw new InvariantError('User gagal ditambahkan');
+      throw new InvariantError('user gagal ditambahkan');
     }
 
     return id;
@@ -39,7 +39,7 @@ class UsersServices {
     const [result] = await this._pool.query(query);
 
     if (result.length > 0) {
-      throw new InvariantError('gagal menambahkan user, username sudah digunakan.');
+      throw new InvariantError('username sudah digunakan.');
     }
   }
 
@@ -67,7 +67,7 @@ class UsersServices {
     const [result] = await this._pool.query(query);
 
     if (!result.length) {
-      throw new AuthenticationError('username yang anda berikan salah');
+      throw new AuthenticationError('username tidak ditemukan');
     }
 
     const { id, password: hashedPassword } = result[0];

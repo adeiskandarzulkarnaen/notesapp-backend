@@ -1,4 +1,4 @@
-// const path = require('path');
+const path = require('path');
 
 const routes = (handler) => [
   {
@@ -44,18 +44,18 @@ const routes = (handler) => [
       auth: 'notesapp_jwt',
     },
   },
-  // {
-  //   method: 'GET',
-  //   path: '/users/image/{filename*}',
-  //   handler: {
-  //     directory: {
-  //       path: path.resolve(__dirname, '../../../public'),
-  //     },
-  //   },
-  //   options: {
-  //     auth: 'notesapp_jwt',
-  //   },
-  // },
+  {
+    method: 'GET',
+    path: '/users/image/{filename*}',
+    handler: {
+      directory: {
+        path: path.resolve(__dirname, '../../../public'),
+      },
+    },
+    // options: {
+    //   auth: 'notesapp_jwt',
+    // },
+  },
 ];
 
 module.exports = routes;

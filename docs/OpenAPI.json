@@ -20,7 +20,7 @@
     },
     "servers": [
         {
-            "url": "https://canihave.my.id:{port}",
+            "url": "https://notesapi.caniget.my.id:{port}",
             "description": "production",
             "variables": {
                 "port": {
@@ -542,9 +542,6 @@
                                             "properties": {
                                                 "accessToken": {
                                                     "type": "string"
-                                                },
-                                                "refreshToken": {
-                                                    "type": "string"
                                                 }
                                             }
                                         }
@@ -556,8 +553,7 @@
                                             "status": "success",
                                             "message": "authentication login berhasil",
                                             "data": {
-                                                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-                                                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                                                "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
                                             }
                                         }
                                     }
@@ -573,137 +569,6 @@
                     }
                 },
                 "operationId": "authLogin",
-                "security": []
-            },
-            "delete": {
-                "tags": [
-                    "Authentications"
-                ],
-                "summary": "auth logout",
-                "description": "use this endpoint to logout your account and will delete the refresh token in the database server",
-                "requestBody": {
-                    "description": "body request logout",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "refreshToken"
-                                ],
-                                "properties": {
-                                    "refreshToken": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "examples": {
-                                "valid payload": {
-                                    "value": {
-                                        "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorSchema"
-                                },
-                                "example": {
-                                    "status": "success",
-                                    "message": "authentication logout berhasil"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/400"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/500"
-                    }
-                },
-                "operationId": "authLogout",
-                "security": []
-            },
-            "put": {
-                "tags": [
-                    "Authentications"
-                ],
-                "summary": "renew access token",
-                "description": "use this endpoint to get new access token if old access token is expired",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "required": [
-                                    "refreshToken"
-                                ],
-                                "properties": {
-                                    "refreshToken": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "examples": {
-                                "valid payload": {
-                                    "value": {
-                                        "refreshToken": "J0RwTP_Pikq3DG0KNnWgIrKlX3L2jh7zba2oJ8JBpv"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "status": {
-                                            "type": "string"
-                                        },
-                                        "message": {
-                                            "type": "string"
-                                        },
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "accessToken": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                "example": {
-                                    "status": "success",
-                                    "message": "access token berhasil diperbarui.",
-                                    "data": {
-                                        "accessToken": "PcD1fg3Cx1cy0vGInKKJDpuXwY5K-HvA2TgLzwyVn3g"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/500"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/500"
-                    }
-                },
-                "operationId": "authRenewToken",
                 "security": []
             }
         },
@@ -1393,7 +1258,7 @@
                             "failed": {
                                 "value": {
                                     "status": "failed",
-                                    "message": "the error message will be attached here"
+                                    "message": "pesan error akan ditampilkan di sini"
                                 }
                             }
                         }

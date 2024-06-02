@@ -17,7 +17,6 @@ const UsersValidator = require('./validator/users');
 
 /* authentications */
 const authentications = require('./api/authentications');
-const AuthenticationsService = require('./services/mysql/AuthenticationsService');
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
@@ -40,7 +39,6 @@ const init = async () => {
   const notesService = new NotesService(collaborationsService);
   const usersService = new UsersService();
   const storageService = new StorageService(path.resolve(__dirname, '../public'));
-  const authenticationsService = new AuthenticationsService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -143,7 +141,6 @@ const init = async () => {
     {
       plugin: authentications,
       options: {
-        authenticationsService,
         usersService,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator,
