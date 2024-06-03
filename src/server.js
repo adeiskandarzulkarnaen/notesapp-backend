@@ -154,12 +154,12 @@ const init = async () => {
         validator: CollaborationsValidator,
       },
     },
-    {
-      plugin: helper,
-      options: {
-        pool: require('./utils/pool'),
-      },
-    },
+    // {
+    //   plugin: helper,
+    //   options: {
+    //     pool: require('./utils/pool'),
+    //   },
+    // },
   ]);
 
   await server.start();
